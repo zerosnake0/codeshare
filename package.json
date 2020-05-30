@@ -1,0 +1,19 @@
+{
+  "name": "codeshare",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zerosnake0/codeshare.git"
+  },
+  "author": "zerosnake0",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zerosnake0/codeshare/issues"
+  },
+  "homepage": "https://github.com/zerosnake0/codeshare#readme"
+}
