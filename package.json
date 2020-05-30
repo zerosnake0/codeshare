@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/zerosnake0/codeshare/issues"
   },
-  "homepage": "https://github.com/zerosnake0/codeshare#readme"
+  "homepage": "https://github.com/zerosnake0/codeshare#readme",
+  "dependencies": {
+    "@codemirror/next": "^0.6.0"
+  }
 }
