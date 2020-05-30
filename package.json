@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/zerosnake0/codeshare#readme",
   "dependencies": {
-    "@codemirror/next": "^0.6.0"
+    "@codemirror/next": "^0.6.0",
+    "sharedb": "^1.3.4"
   }
 }
