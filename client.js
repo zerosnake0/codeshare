@@ -5,23 +5,23 @@ require('./cm.js');
 
 const codeshare = {
   debug: false,
-}
-global.CodeShare = codeshare
+};
+global.CodeShare = codeshare;
 const debugGroup = (msg, ...args) => {
   if (codeshare.debug) {
-    console.group(msg, ...args)
+    console.group(msg, ...args);
   }
-}
+};
 const debugGroupEnd = (msg, ...args) => {
   if (codeshare.debug) {
-    console.groupEnd()
+    console.groupEnd();
   }
-}
+};
 const debugLog = (msg, ...args) => {
   if (codeshare.debug) {
-    console.log(msg, ...args)
+    console.log(msg, ...args);
   }
-}
+};
 
 sharedb.types.register(OT.type);
 

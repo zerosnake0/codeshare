@@ -17,7 +17,7 @@ require('codemirror/mode/nginx/nginx');
 require('codemirror/mode/php/php');
 require('codemirror/mode/protobuf/protobuf');
 require('codemirror/mode/python/python');
-require('codemirror/mode/shell/shell')
-require('codemirror/mode/sql/sql')
-require('codemirror/mode/xml/xml')
-require('codemirror/mode/yaml/yaml')
+require('codemirror/mode/shell/shell');
+require('codemirror/mode/sql/sql');
+require('codemirror/mode/xml/xml');
+require('codemirror/mode/yaml/yaml');

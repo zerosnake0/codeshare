@@ -56,3 +56,8 @@ wss.on('connection', (ws) => {
 const port = 8080;
 server.listen(port);
 console.debug(`Listening on ${port}`);
+
+process.on('SIGINT', function () {
+  console.log("SIGINT received, exiting...");
+  process.exit();
+});
