@@ -3,6 +3,26 @@ const OT = require('ot-text-unicode');
 const CodeMirror = require('codemirror');
 require('./cm.js');
 
+const codeshare = {
+  debug: false,
+}
+global.CodeShare = codeshare
+const debugGroup = (msg, ...args) => {
+  if (codeshare.debug) {
+    console.group(msg, ...args)
+  }
+}
+const debugGroupEnd = (msg, ...args) => {
+  if (codeshare.debug) {
+    console.groupEnd()
+  }
+}
+const debugLog = (msg, ...args) => {
+  if (codeshare.debug) {
+    console.log(msg, ...args)
+  }
+}
+
 sharedb.types.register(OT.type);
 
 const ReconnectingWebSocket = require('reconnecting-websocket');
@@ -17,19 +37,19 @@ connStatusSpan.innerHTML = 'Not Connected';
 
 // element.style.backgroundColor = 'gray';
 socket.addEventListener('open', function () {
-  console.log("socket connected");
+  debugLog("socket connected");
   connStatusSpan.innerHTML = 'Connected';
   connStatusSpan.style.backgroundColor = 'white';
 });
 
 socket.addEventListener('close', function () {
-  console.log("socket cloed");
+  debugLog("socket cloed");
   connStatusSpan.innerHTML = 'Closed';
   connStatusSpan.style.backgroundColor = 'gray';
 });
 
 socket.addEventListener('error', function () {
-  console.log("socket error");
+  debugLog("socket error");
   connStatusSpan.innerHTML = 'Error';
   connStatusSpan.style.backgroundColor = 'red';
 });
@@ -60,7 +80,7 @@ const findMode = (mode) => {
   const sel = document.getElementById("mode");
   for (name in CodeMirror.modes) {
     const mode = findMode(name);
-    // console.log(name, mode);
+    // debugLog(name, mode);
     if (mode) {
       const opt = document.createElement('option');
       opt.text = mode.name;
@@ -70,7 +90,7 @@ const findMode = (mode) => {
   }
   sel.addEventListener("change", (event) => {
     const mode = event.target.value;
-    console.log("setting codemirror mode to", mode);
+    debugLog("setting codemirror mode to", mode);
     codeMirror.setOption("mode", mode);
   });
 })();
@@ -101,8 +121,8 @@ const doc = connection.get('examples', pathnames[pathnames.length - 1]);
 doc.subscribe(function (err) {
   if (err) throw err;
 
-  console.log("doc", doc);
-  // console.log("doc.data", doc.data);
+  debugLog("doc", doc);
+  // debugLog("doc.data", doc.data);
   codeMirror.setValue(doc.data);
   codeMirror.setOption("readOnly", false);
   setDocStatus("initialized");
@@ -112,11 +132,11 @@ doc.subscribe(function (err) {
   });
 
   doc.on('before op', (ops, source) => {
-    console.log("doc before op:", ops, source);
+    debugLog("doc before op:", ops, source);
   });
 
   doc.on("op", (ops, source) => {
-    console.group("doc op:", ops, source);
+    debugGroup("doc op:", ops, source);
     try {
       if (source) {
         return;
@@ -150,7 +170,7 @@ doc.subscribe(function (err) {
       console.error(thrown.message);
       throw thrown;
     } finally {
-      console.groupEnd();
+      debugGroupEnd();
     }
   });
 
@@ -160,7 +180,7 @@ doc.subscribe(function (err) {
         console.error("error while fetching, resync in 5 sec", err);
         setTimeout(sync, 5000);
       } else {
-        // console.log("codeMirror.getValue()", codeMirror.getValue())
+        // debugLog("codeMirror.getValue()", codeMirror.getValue())
         if (doc.type === null) {
           setDocStatus("synchronization failed... please save your doc manually and refresh");
           // doc.create(codeMirror.getValue(), (err) => {
@@ -168,7 +188,7 @@ doc.subscribe(function (err) {
           //     console.error("error while creating, resync in 5 sec", err);
           //     setTimeout(sync, 5000);
           //   } else {
-          //     console.log("doc created with local data");
+          //     debugLog("doc created with local data");
           //     needSync = false;
           //   }
           // });
@@ -181,10 +201,10 @@ doc.subscribe(function (err) {
   };
 
   codeMirror.on("beforeChange", (codeMirror, change) => {
-    console.group("on codeMirror beforeChange");
+    debugGroup("on codeMirror beforeChange");
     try {
       if (needSync) {
-        console.log("need sychronize");
+        debugLog("need sychronize");
         while (change) {
           if (change.origin !== "setValue") {
             change.cancel();
@@ -193,7 +213,7 @@ doc.subscribe(function (err) {
         }
       } else {
         while (change) {
-          console.log("change", change);
+          debugLog("change", change);
           if (change.origin !== "+sharedb") {
             const indexFrom = codeMirror.indexFromPos(change.from);
             const indexTo = codeMirror.indexFromPos(change.to);
@@ -206,7 +226,7 @@ doc.subscribe(function (err) {
                 console.error("error while submitting", err);
                 setDocStatus("synchronizing...");
                 if (!needSync) {
-                  console.log("already synchronizing...");
+                  debugLog("already synchronizing...");
                   needSync = true;
                   sync();
                 }
@@ -220,26 +240,26 @@ doc.subscribe(function (err) {
       console.error(thrown.message);
       throw thrown;
     } finally {
-      console.groupEnd();
+      debugGroupEnd();
     }
   });
 
   codeMirror.on("change", (codeMirror, change) => {
-    console.group("on codeMirror change");
+    debugGroup("on codeMirror change");
     try {
-      // console.log("doc.data", doc.data);
+      // debugLog("doc.data", doc.data);
       if (needSync) {
         while (change) {
           if (change.origin === "setValue") {
             needSync = false;
-            console.log("sync finished");
+            debugLog("sync finished");
             setDocStatus("synchronization finished, old data has been saved in history");
           }
           change = change.next;
         }
       }
     } finally {
-      console.groupEnd();
+      debugGroupEnd();
     }
   });
 });

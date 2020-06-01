@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "bash build.sh",
+    "build": "sh build.sh",
     "start": "node server.js",
-    "dev": "./build_dev.sh && node server.js"
+    "dev": "sh build_dev.sh && node server.js"
   },
   "repository": {
     "type": "git",

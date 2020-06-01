@@ -12,31 +12,6 @@ ShareDB.types.register(OT.type);
 const backend = new ShareDB();
 const connection = backend.connect();
 
-/*
-const createDoc = (callback) => {
-
-  const doc = connection.get('examples', 'codemirror');
-  doc.fetch((err) => {
-    if (err) {
-      throw err;
-    }
-    console.debug("doc.type", doc.type);
-    if (doc.type === null) {
-      doc.create("// hello world", OT.type.name, callback);
-      return;
-    }
-    callback();
-  });
-};
-
-const startServer = () => {
-  
-};
-
-const backend = new ShareDB();
-createDoc(startServer);
-*/
-
 const app = express();
 
 // static
