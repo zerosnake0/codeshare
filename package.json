@@ -21,6 +21,7 @@
   "dependencies": {
     "@teamwork/websocket-json-stream": "^2.0.0",
     "codemirror": "^5.54.0",
+    "d3-color": "^1.4.1",
     "express": "^4.17.1",
     "http": "0.0.1-security",
     "ot-text-unicode": "^3.1.0",

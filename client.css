@@ -5,3 +5,12 @@
   height: auto;
   min-height: 300px;
 }
+
+.presence-cursor {
+  position: absolute;
+  width: 1px;
+}
+
+.presence-widget {
+  color: white;
+}

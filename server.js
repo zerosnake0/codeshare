@@ -2,14 +2,14 @@ const http = require('http');
 const path = require('path');
 const express = require('express');
 const ShareDB = require('sharedb');
-const OT = require('ot-text-unicode');
 const WS = require('ws');
 const WebSocketJSONStream = require('@teamwork/websocket-json-stream');
 const shortid = require('shortid');
+const OT = require('./ot.js');
 
-ShareDB.types.register(OT.type);
-
-const backend = new ShareDB();
+const backend = new ShareDB({
+  presence: true,
+});
 const connection = backend.connect();
 
 const app = express();
@@ -27,7 +27,7 @@ app.post("/client", (req, res) => {
 const clientPage = path.resolve(__dirname, "static/client.html");
 app.use("/client/:id", (req, res) => {
   const id = req.params.id;
-  const doc = connection.get("examples", id);
+  const doc = connection.get("codemirror", id);
   // console.log(id, doc.type);
   if (doc.type === null) {
     doc.create("// hello world", OT.type.name, (err) => {

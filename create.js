@@ -1,7 +1,7 @@
 (() => {
   const element = document.getElementById("create");
   element.addEventListener("click", (event) => {
-    console.log(event.target);
+    // console.log(event.target);
     event.target.disabled = true;
     fetch("/client", {
       method: "POST",
