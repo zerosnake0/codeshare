@@ -307,6 +307,14 @@ doc.subscribe(function (err) {
       }
       const p = getPresence(id);
 
+      if (range === undefined || range === null) {
+        p.bm.style.visibility = "hidden";
+        p.w.style.visibility = "hidden";
+        return;
+      }
+      p.bm.style.visibility = "visible";
+      p.w.style.visibility = "visible";
+
       const pos = codeMirror.posFromIndex(range);
       codeMirror.addWidget(pos, p.w);
       codeMirror.setBookmark(pos, {

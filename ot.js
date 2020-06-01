@@ -7,8 +7,8 @@ const type = OT.type;
 type.transformPresence = (range, ops, source) => {
   log.group("transformPresence", range, ops, source);
   try {
-    if (range === undefined) {
-      return;
+    if (range === undefined || range === null) {
+      return range;
     }
     return type.transformPosition(range, ops);
   } finally {
