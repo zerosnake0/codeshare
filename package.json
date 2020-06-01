@@ -6,7 +6,7 @@
   "scripts": {
     "build": "bash build.sh",
     "start": "node server.js",
-    "dev": "bash build_client.sh && node server.js"
+    "dev": "./build_dev.sh && node server.js"
   },
   "repository": {
     "type": "git",
@@ -33,6 +33,7 @@
     "browserify": "^16.5.1",
     "browserify-css": "^0.15.0",
     "bufferutil": "^4.0.1",
+    "tinyify": "^2.5.2",
     "utf-8-validate": "^5.0.2"
   }
 }
