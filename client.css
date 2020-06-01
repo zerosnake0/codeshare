@@ -1,0 +1,7 @@
+@import "./node_modules/codemirror/lib/codemirror.css";
+
+.CodeMirror {
+  border: 1px solid #eee;
+  height: auto;
+  min-height: 300px;
+}

@@ -1,0 +1,8 @@
+.vscode
+.git*
+
+Dockerfile
+
+node_modules
+build
+static/dist

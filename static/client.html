@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>CodeShare</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+  <style>
+    body {
+      background: #ddd;
+    }
+
+    #container {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      bottom: 24px;
+      left: 24px;
+    }
+
+    /* textarea {
+      font: 14px/1.3 sans-serif;
+      padding: 4px 8px;
+      height: 100%;
+      width: 100%;
+      box-sizing: border-box;
+    } */
+
+    #title {
+      font-size: 24;
+    }
+
+    div#textarea {
+      margin-top: 10px;
+    }
+
+    input#clear {
+      margin: 10px;
+    }
+
+    div#history div {
+      border: 1px solid black;
+      margin-bottom: 10px;
+      padding: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container">
+    <h1 id="title">CodeShare</h1>
+    <p>Connection Status: <span id="conn-status-span"></span></p>
+    <p>Doc Status: <span id="doc-status-span"></span></p>
+    <!-- <textarea autofocus></textarea> -->
+    <div>
+      <label for="mode">Choose a mode:</label>
+      <select id="mode"></select>
+    </div>
+    <div id="textarea"></div>
+    <div>
+      <input type="button" id="clear" value="clear history">
+      <div id="history">
+      </div>
+    </div>
+  </div>
+
+  <script src="/dist/client.js"></script>
+</body>
+
+</html>
