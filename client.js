@@ -100,7 +100,7 @@ const [addHistory, clearHistory] = (() => {
 
   return [(txt) => {
     const record = document.createElement("div");
-    const code = document.createElement("code");
+    const code = document.createElement("pre");
     code.innerHTML = txt;
     record.appendChild(code);
     history.prepend(record);
