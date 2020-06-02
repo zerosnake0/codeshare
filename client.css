@@ -7,7 +7,7 @@
 }
 
 .presence-cursor {
-  position: absolute;
+  display: inline-block;
   width: 1px;
 }
 
