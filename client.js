@@ -314,6 +314,10 @@ doc.subscribe(function (err) {
         return;
       }
       const p = getPresence(id);
+      if (p.cmBm) {
+        p.cmBm.clear();
+        delete p.cmBm;
+      }
 
       if (range === undefined || range === null) {
         p.bm.style.visibility = "hidden";
@@ -325,7 +329,7 @@ doc.subscribe(function (err) {
 
       const pos = codeMirror.posFromIndex(range);
       codeMirror.addWidget(pos, p.w);
-      codeMirror.setBookmark(pos, {
+      p.cmBm = codeMirror.setBookmark(pos, {
         widget: p.bm,
       });
     } finally {
