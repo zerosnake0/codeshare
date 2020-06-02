@@ -274,9 +274,17 @@ doc.subscribe(function (err) {
 
   const presenceMap = {};
 
+  const idToColor = (id) => {
+    let hash = 0;
+    for (let i = 0; i < id.length; i++) {
+      hash = id.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return hcl(hash % 360, 90, 35, 0.5);
+  };
+
   const getPresence = (id) => {
     if (!(id in presenceMap)) {
-      const color = hcl(Math.random() * 180, 90, 35);
+      const color = idToColor(id);
 
       const w = document.createElement("span");
       w.className = "presence-widget";
