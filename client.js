@@ -1,3 +1,6 @@
+const g = require("./global.js");
+g.codeshare.debug = window.location.hostname == "localhost";
+
 const sharedb = require('sharedb/lib/client');
 const CodeMirror = require('codemirror');
 const shortid = require('shortid');
@@ -35,8 +38,13 @@ socket.addEventListener('error', function () {
   connStatusSpan.style.backgroundColor = 'red';
 });
 
-const setDocStatus = (msg) => {
+const setDocStatus = (msg, ok = true) => {
   docStatusSpan.innerHTML = msg;
+  if (ok) {
+    docStatusSpan.style.backgroundColor = undefined;
+  } else {
+    docStatusSpan.style.backgroundColor = 'red';
+  }
 };
 
 setDocStatus("initializing...");
@@ -119,9 +127,11 @@ doc.subscribe(function (err) {
     log.info("doc before op:", ops, source);
   });
 
+  let applyingOp = false;
   doc.on("op", (ops, source) => {
     log.group("doc op:", ops, source);
     try {
+      applyingOp = true;
       if (source) {
         return;
       }
@@ -155,6 +165,7 @@ doc.subscribe(function (err) {
       console.error(thrown.message);
       throw thrown;
     } finally {
+      applyingOp = false;
       log.groupEnd();
     }
   });
@@ -167,7 +178,7 @@ doc.subscribe(function (err) {
       } else {
         // log.info("codeMirror.getValue()", codeMirror.getValue())
         if (doc.type === null) {
-          setDocStatus("synchronization failed... please save your doc manually and refresh");
+          setDocStatus("synchronization failed... please save your doc manually and refresh", false);
           // doc.create(codeMirror.getValue(), (err) => {
           //   if (err) {
           //     console.error("error while creating, resync in 5 sec", err);
@@ -185,44 +196,53 @@ doc.subscribe(function (err) {
     });
   };
 
+  const errHandler = (err) => {
+    if (err) {
+      console.error("error while submitting", err);
+      setDocStatus("synchronizing...");
+      if (!needSync) {
+        log.info("already synchronizing...");
+        needSync = true;
+        sync();
+      }
+    }
+  };
+  let opQueue = [];
   codeMirror.on("beforeChange", (codeMirror, change) => {
     log.group("on codeMirror beforeChange");
     try {
+      let changeCp = change;
       if (needSync) {
         log.info("need sychronize");
-        while (change) {
-          if (change.origin !== "setValue") {
-            change.cancel();
+        while (changeCp) {
+          if (changeCp.origin !== "setValue") {
+            changeCp.cancel();
           }
-          change = change.next;
+          changeCp = changeCp.next;
         }
       } else {
-        while (change) {
-          log.info("change", change);
-          if (change.origin !== "+sharedb") {
-            const indexFrom = codeMirror.indexFromPos(change.from);
-            const indexTo = codeMirror.indexFromPos(change.to);
-            doc.submitOp([
+        while (changeCp) {
+          log.info("change", changeCp);
+          if (changeCp.origin !== "+sharedb") {
+            const indexFrom = codeMirror.indexFromPos(changeCp.from);
+            const indexTo = codeMirror.indexFromPos(changeCp.to);
+            opQueue.push([
               indexFrom,
               { d: indexTo - indexFrom },
-              change.text.join("\n")
-            ], (err) => {
-              if (err) {
-                console.error("error while submitting", err);
-                setDocStatus("synchronizing...");
-                if (!needSync) {
-                  log.info("already synchronizing...");
-                  needSync = true;
-                  sync();
-                }
-              }
-            });
+              changeCp.text.join("\n")
+            ]);
           }
-          change = change.next;
+          changeCp = changeCp.next;
         }
       }
     } catch (thrown) {
       console.error(thrown.message);
+      // cancel all changes if error
+      opQueue = [];
+      while (change) {
+        change.cancel();
+        change = change.next;
+      }
       throw thrown;
     } finally {
       log.groupEnd();
@@ -242,8 +262,13 @@ doc.subscribe(function (err) {
           }
           change = change.next;
         }
+      } else {
+        for (let i = 0; i < opQueue.length; i++) {
+          doc.submitOp(opQueue[i], errHandler);
+        }
       }
     } finally {
+      opQueue = [];
       log.groupEnd();
     }
   });
@@ -260,6 +285,9 @@ doc.subscribe(function (err) {
   codeMirror.on('cursorActivity', (codeMirror) => {
     log.group('on codeMirror cursorActivity', codeMirror);
     try {
+      if (applyingOp) {
+        return;
+      }
       const cursorPos = codeMirror.getCursor();
       const index = codeMirror.indexFromPos(cursorPos);
       localPresence.submit(index, (err) => {

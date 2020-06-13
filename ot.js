@@ -10,11 +10,9 @@ type.transformPresence = (range, ops, source) => {
     if (range === undefined || range === null) {
       return range;
     }
-    // no transform if source is remote
-    if (!source) {
-      return range;
-    }
-    return type.transformPosition(range, ops);
+    newRange = type.transformPosition(range, ops);
+    console.log(range, ops, newRange);
+    return newRange;
   } finally {
     log.groupEnd();
   }

@@ -5,7 +5,7 @@ const group = (msg, ...args) => {
     console.group(msg, ...args);
   }
 };
-const groupEnd = (msg, ...args) => {
+const groupEnd = () => {
   if (g.codeshare.debug) {
     console.groupEnd();
   }
